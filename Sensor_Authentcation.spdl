@@ -1,0 +1,41 @@
+protocol SensorAuthentication(CH,AS)
+{
+
+role CH
+{
+    fresh NCH: Nonce;
+    fresh CMD: Nonce;
+
+    send_1(CH,AS,{CMD,NCH}k(CH,AS));
+
+    var NAS: Nonce;
+    var DATA: Nonce;
+
+    recv_2(AS,CH,{DATA,NAS,NCH}k(CH,AS));
+
+    claim(CH, Secret, DATA);
+    claim(CH, Alive);
+    claim(CH, Weakagree);
+    claim(CH, Niagree);
+    claim(CH, Nisynch);
+}
+
+role AS
+{
+    var CMD: Nonce;
+    var NCH: Nonce;
+
+    recv_1(CH,AS,{CMD,NCH}k(CH,AS));
+
+    fresh NAS: Nonce;
+    fresh DATA: Nonce;
+
+    send_2(AS,CH,{DATA,NAS,NCH}k(CH,AS));
+
+    claim(AS, Alive);
+    claim(AS, Weakagree);
+    claim(AS, Niagree);
+    claim(AS, Nisynch);
+}
+
+}
